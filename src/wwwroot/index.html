@@ -1,0 +1,32 @@
+<html>
+    <head>       
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <h1>Htmx Chat</h1>
+        <div id="clientSection">
+            <label>You are client: </label><span id="showClientId"></span>
+        </div>
+      
+        <form hx-post="/add" hx-swap="none" 
+            hx-on:htmx:after-request="document.getElementById('message').value = '';document.getElementById('showClientId').innerHTML = document.getElementById('clientId').value">
+     
+            <div>
+              <label>Send Message</label>
+              <input id="message" name="message" > 
+              <input id="clientId" name="clientId" value="abc" type="hidden" 
+                    hx-get="/register" hx-trigger="load" hx-swap="outerHTML">
+            </div>    
+            
+            <button class="btn btn-default" >Send</button>
+        </form>
+
+        <div hx-ext="sse" sse-connect="/messages" hx-swap="beforeend">
+            Received messages:
+            <div id="messages" sse-swap="message">
+            </div>
+        </div>
+    </body>
+</html>
